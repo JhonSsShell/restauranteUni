@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RestaurantOS — Reservas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside id="sidebar">
+    <div style="padding:20px 18px 12px;">
+      <div style="font-size:18px; font-family:'DM Serif Display',serif; color:#F5EDD9; margin-bottom:2px;">RestaurantOS</div>
+      <div style="font-size:11px; color:var(--text-muted);">v1.0 — Línea Base</div>
+    </div>
+    <div class="divider" style="margin:0 18px 8px;"></div>
+
+    <div id="user-badge" style="padding:10px 18px; margin-bottom:8px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="avatar" id="user-avatar" style="background:rgba(217,119,6,0.2); color:var(--amber-light);">AD</div>
+        <div>
+          <div style="font-size:13px; font-weight:500;" id="user-name">Cargando…</div>
+          <div style="font-size:11px; color:var(--text-muted);" id="user-role-label"></div>
+        </div>
+      </div>
+    </div>
+
+    <nav id="nav-links" style="flex:1; overflow-y:auto;"></nav>
+
+    <div class="divider" style="margin:8px 18px;"></div>
+    <div style="padding:10px 18px 16px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <span class="ping"></span>
+        <span style="font-size:12px; color:var(--text-muted);">Sistema operativo</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%; justify-content:center;" onclick="doLogout()">
+        Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main id="main">
+    <div class="page-content">
+
+      <!-- Header -->
+      <div class="page-header">
+        <div>
+          <h2>Reservas</h2>
+          <p>Gestión por fecha y hora</p>
+        </div>
+        <button class="btn btn-amber" onclick="openReservaModal()">+ Nueva reserva</button>
+      </div>
+
+      <!-- Filters -->
+      <div class="card" style="margin-bottom:20px;">
+        <div style="display:flex; gap:14px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:160px;">
+            <label class="lbl">Filtrar por fecha</label>
+            <input class="inp" type="date" id="filter-date" onchange="renderReservas()">
+          </div>
+          <div style="flex:1; min-width:160px;">
+            <label class="lbl">Estado</label>
+            <select class="inp" id="filter-status" onchange="renderReservas()">
+              <option value="">Todos</option>
+              <option value="confirmada">Confirmada</option>
+              <option value="pendiente">Pendiente</option>
+              <option value="cancelada">Cancelada</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="card" style="padding:0; overflow:hidden; width:100%;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Cliente</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Personas</th>
+              <th>Mesa</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="reservas-table"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div id="toast">✓ Acción completada</div>
+<div id="modal-container"></div>
+
+<script src="../script.js"></script>
+<script>
+  if (checkAuth()) {
+    renderReservas();
+  }
+</script>
+</body>
+</html>

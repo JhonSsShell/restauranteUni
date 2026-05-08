@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RestaurantOS — Caja &amp; Reportes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside id="sidebar">
+    <div style="padding:20px 18px 12px;">
+      <div style="font-size:18px; font-family:'DM Serif Display',serif; color:#F5EDD9; margin-bottom:2px;">RestaurantOS</div>
+      <div style="font-size:11px; color:var(--text-muted);">v1.0 — Línea Base</div>
+    </div>
+    <div class="divider" style="margin:0 18px 8px;"></div>
+
+    <div id="user-badge" style="padding:10px 18px; margin-bottom:8px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="avatar" id="user-avatar" style="background:rgba(217,119,6,0.2); color:var(--amber-light);">AD</div>
+        <div>
+          <div style="font-size:13px; font-weight:500;" id="user-name">Cargando…</div>
+          <div style="font-size:11px; color:var(--text-muted);" id="user-role-label"></div>
+        </div>
+      </div>
+    </div>
+
+    <nav id="nav-links" style="flex:1; overflow-y:auto;"></nav>
+
+    <div class="divider" style="margin:8px 18px;"></div>
+    <div style="padding:10px 18px 16px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <span class="ping"></span>
+        <span style="font-size:12px; color:var(--text-muted);">Sistema operativo</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%; justify-content:center;" onclick="doLogout()">
+        Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main id="main">
+    <div class="page-content">
+
+      <!-- Header -->
+      <div class="page-header">
+        <div>
+          <h2>Cierre de caja y reportes</h2>
+          <p>Ventas diarias y facturación</p>
+        </div>
+        <button class="btn btn-amber" onclick="generarCierre()">⬇ Generar cierre del día</button>
+      </div>
+
+      <!-- KPI grid -->
+      <div class="grid-4" style="margin-bottom:24px;">
+        <div class="stat-box">
+          <div class="stat-label">Total ventas</div>
+          <div class="stat-val">$1,847</div>
+          <div style="font-size:12px; color:#6EE7B7; margin-top:4px;">23 pedidos</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Efectivo</div>
+          <div class="stat-val">$1,120</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">60.6%</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Tarjeta</div>
+          <div class="stat-val">$727</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">39.4%</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Ticket prom.</div>
+          <div class="stat-val">$80.3</div>
+          <div style="font-size:12px; color:var(--amber-light); margin-top:4px;">+$5 vs ayer</div>
+        </div>
+      </div>
+
+      <!-- Charts row -->
+      <div class="grid-2" style="margin-bottom:20px;">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:16px;">Ventas por semana</div>
+          <div class="chart-bar" id="week-chart"></div>
+          <div style="display:flex; justify-content:space-around; margin-top:10px;">
+            <span style="font-size:11px; color:var(--text-muted);">Lun</span>
+            <span style="font-size:11px; color:var(--text-muted);">Mar</span>
+            <span style="font-size:11px; color:var(--text-muted);">Mié</span>
+            <span style="font-size:11px; color:var(--text-muted);">Jue</span>
+            <span style="font-size:11px; color:var(--text-muted);">Vie</span>
+            <span style="font-size:11px; color:var(--text-muted);">Sáb</span>
+            <span style="font-size:11px; color:var(--text-muted);">Dom</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Platos más vendidos</div>
+          <div id="top-dishes" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+      </div>
+
+      <!-- Invoices table -->
+      <div class="card" style="padding:0; overflow:hidden; width:100%;">
+        <div style="padding:16px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-size:13px; font-weight:500;">Facturas del día</span>
+          <span class="badge badge-amber">23 registros</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>#Factura</th>
+              <th>Hora</th>
+              <th>Mesero</th>
+              <th>Mesa</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Pago</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="facturas-table"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div id="toast">✓ Acción completada</div>
+<div id="modal-container"></div>
+
+<script src="../script.js"></script>
+<script>
+  if (checkAuth()) {
+    renderFacturas();
+    renderTopDishes();
+    initWeekChart();
+  }
+</script>
+</body>
+</html>
