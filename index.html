@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RestaurantOS — Sistema de Gestión v1.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ═══ LOGIN SCREEN ═══ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div style="text-align:center; margin-bottom:28px;">
+      <div style="font-size:28px; margin-bottom:4px;">🍽️</div>
+      <h1 style="font-size:26px; color:#F5EDD9; margin:0 0 4px;">RestaurantOS</h1>
+      <p style="font-size:13px; color:var(--text-muted); margin:0;">Sistema de Gestión v1.0 — Línea Base</p>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label class="lbl">Rol de acceso</label>
+      <select class="inp" id="login-role">
+        <option value="admin">👑 Administrador</option>
+        <option value="mesero">🧑‍🍳 Mesero</option>
+        <option value="cliente">👤 Cliente</option>
+      </select>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label class="lbl">Usuario</label>
+      <input class="inp" id="login-user" value="admin@restaurant.com" placeholder="correo@restaurante.com">
+    </div>
+    <div style="margin-bottom:24px;">
+      <label class="lbl">Contraseña</label>
+      <input class="inp" type="password" value="••••••••" placeholder="••••••••">
+    </div>
+    <button class="btn btn-amber" style="width:100%; justify-content:center;" onclick="doLogin()">
+      Ingresar al sistema →
+    </button>
+    <p style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:14px;">
+      Módulo: Autenticación de Usuarios — Línea Base v1.0
+    </p>
+  </div>
+</div>
+
+<!-- ═══ APP SHELL ═══ -->
+<div id="app" style="display:none;">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div style="padding:20px 18px 12px;">
+      <div style="font-size:18px; font-family:'DM Serif Display',serif; color:#F5EDD9; margin-bottom:2px;">RestaurantOS</div>
+      <div style="font-size:11px; color:var(--text-muted);">v1.0 — Línea Base</div>
+    </div>
+    <div class="divider" style="margin:0 18px 8px;"></div>
+
+    <div id="user-badge" style="padding:10px 18px; margin-bottom:8px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="avatar" style="background:rgba(217,119,6,0.2); color:var(--amber-light);" id="user-avatar">AD</div>
+        <div>
+          <div style="font-size:13px; font-weight:500;" id="user-name">Administrador</div>
+          <div style="font-size:11px; color:var(--text-muted);" id="user-role-label">admin@restaurant.com</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="nav-links" style="flex:1; overflow-y:auto;"></div>
+
+    <div class="divider" style="margin:8px 18px;"></div>
+    <div style="padding:10px 18px 16px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <span class="ping"></span>
+        <span style="font-size:12px; color:var(--text-muted);">Sistema operativo</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%; justify-content:center;" onclick="doLogout()">
+        Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main id="main">
+
+    <!-- ─── PANEL: DASHBOARD ─── -->
+    <div id="panel-dashboard" class="panel">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+        <div>
+          <h2 style="font-size:22px; color:#F5EDD9; margin:0 0 4px;">Dashboard general</h2>
+          <p style="font-size:13px; color:var(--text-muted); margin:0;">Resumen operativo del día</p>
+        </div>
+        <span class="badge badge-green">✦ Línea Base v1.0</span>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;">
+        <div class="stat-box">
+          <div class="stat-label">Pedidos hoy</div>
+          <div class="stat-val">23</div>
+          <div style="font-size:12px; color:#6EE7B7; margin-top:4px;">↑ 8% vs ayer</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Reservas activas</div>
+          <div class="stat-val">7</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">3 pendientes</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Ventas del día</div>
+          <div class="stat-val">$1,847</div>
+          <div style="font-size:12px; color:#6EE7B7; margin-top:4px;">↑ 12% vs ayer</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Mesas ocupadas</div>
+          <div class="stat-val">5/12</div>
+          <div style="font-size:12px; color:var(--amber-light); margin-top:4px;">41% ocupación</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:20px;">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:16px;">Ventas por hora (hoy)</div>
+          <div class="chart-bar" id="dash-chart"></div>
+          <div style="display:flex; justify-content:space-between; margin-top:8px;">
+            <span style="font-size:11px; color:var(--text-muted);">08:00</span>
+            <span style="font-size:11px; color:var(--text-muted);">14:00</span>
+            <span style="font-size:11px; color:var(--text-muted);">21:00</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Últimos pedidos</div>
+          <div id="last-orders-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PANEL: MENÚ ─── -->
+    <div id="panel-menu" class="panel">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+        <div>
+          <h2 style="font-size:22px; color:#F5EDD9; margin:0 0 4px;">Menú digital</h2>
+          <p style="font-size:13px; color:var(--text-muted); margin:0;">CRUD de platos y categorías</p>
+        </div>
+        <button class="btn btn-amber" onclick="openMenuModal()">+ Nuevo plato</button>
+      </div>
+
+      <div class="tabs" id="menu-cats"></div>
+
+      <div id="menu-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+    </div>
+
+    <!-- ─── PANEL: PEDIDOS ─── -->
+    <div id="panel-pedidos" class="panel">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+        <div>
+          <h2 style="font-size:22px; color:#F5EDD9; margin:0 0 4px;">Registro de pedidos</h2>
+          <p style="font-size:13px; color:var(--text-muted); margin:0;">Seguimiento en tiempo real</p>
+        </div>
+        <button class="btn btn-amber" onclick="openPedidoModal()">+ Nuevo pedido</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px;">
+        <div class="stat-box" style="text-align:center;">
+          <div class="stat-label">En espera</div>
+          <div class="stat-val" id="cnt-espera">0</div>
+        </div>
+        <div class="stat-box" style="text-align:center;">
+          <div class="stat-label">En cocina</div>
+          <div class="stat-val" id="cnt-cocina">0</div>
+        </div>
+        <div class="stat-box" style="text-align:center;">
+          <div class="stat-label">Entregados</div>
+          <div class="stat-val" id="cnt-entregado">0</div>
+        </div>
+      </div>
+
+      <div id="orders-board" style="display:flex; gap:16px;"></div>
+    </div>
+
+    <!-- ─── PANEL: RESERVAS ─── -->
+    <div id="panel-reservas" class="panel">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+        <div>
+          <h2 style="font-size:22px; color:#F5EDD9; margin:0 0 4px;">Reservas</h2>
+          <p style="font-size:13px; color:var(--text-muted); margin:0;">Gestión por fecha y hora</p>
+        </div>
+        <button class="btn btn-amber" onclick="openReservaModal()">+ Nueva reserva</button>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div style="display:flex; gap:14px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:160px;">
+            <label class="lbl">Filtrar por fecha</label>
+            <input class="inp" type="date" id="filter-date" onchange="renderReservas()">
+          </div>
+          <div style="flex:1; min-width:160px;">
+            <label class="lbl">Estado</label>
+            <select class="inp" id="filter-status" onchange="renderReservas()">
+              <option value="">Todos</option>
+              <option value="confirmada">Confirmada</option>
+              <option value="pendiente">Pendiente</option>
+              <option value="cancelada">Cancelada</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Cliente</th><th>Fecha</th><th>Hora</th><th>Personas</th><th>Mesa</th><th>Estado</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="reservas-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── PANEL: CAJA / REPORTES ─── -->
+    <div id="panel-caja" class="panel">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+        <div>
+          <h2 style="font-size:22px; color:#F5EDD9; margin:0 0 4px;">Cierre de caja y reportes</h2>
+          <p style="font-size:13px; color:var(--text-muted); margin:0;">Ventas diarias y facturación</p>
+        </div>
+        <button class="btn btn-amber" onclick="generarCierre()">⬇ Generar cierre del día</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;">
+        <div class="stat-box">
+          <div class="stat-label">Total ventas</div>
+          <div class="stat-val">$1,847</div>
+          <div style="font-size:12px; color:#6EE7B7; margin-top:4px;">23 pedidos</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Efectivo</div>
+          <div class="stat-val">$1,120</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">60.6%</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Tarjeta</div>
+          <div class="stat-val">$727</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">39.4%</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Ticket prom.</div>
+          <div class="stat-val">$80.3</div>
+          <div style="font-size:12px; color:var(--amber-light); margin-top:4px;">+$5 vs ayer</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:16px;">Ventas por semana</div>
+          <div class="chart-bar" id="week-chart"></div>
+          <div style="display:flex; justify-content:space-around; margin-top:10px;">
+            <span style="font-size:11px; color:var(--text-muted);">Lun</span>
+            <span style="font-size:11px; color:var(--text-muted);">Mar</span>
+            <span style="font-size:11px; color:var(--text-muted);">Mié</span>
+            <span style="font-size:11px; color:var(--text-muted);">Jue</span>
+            <span style="font-size:11px; color:var(--text-muted);">Vie</span>
+            <span style="font-size:11px; color:var(--text-muted);">Sáb</span>
+            <span style="font-size:11px; color:var(--text-muted);">Dom</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Platos más vendidos</div>
+          <div id="top-dishes" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="padding:16px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-size:13px; font-weight:500;">Facturas del día</span>
+          <span class="badge badge-amber">23 registros</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>#Factura</th><th>Hora</th><th>Mesero</th><th>Mesa</th><th>Items</th><th>Total</th><th>Pago</th><th>Estado</th></tr>
+          </thead>
+          <tbody id="facturas-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── PANEL: USUARIOS ─── -->
+    <div id="panel-usuarios" class="panel">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+        <div>
+          <h2 style="font-size:22px; color:#F5EDD9; margin:0 0 4px;">Gestión de usuarios</h2>
+          <p style="font-size:13px; color:var(--text-muted); margin:0;">Clientes, meseros, administradores</p>
+        </div>
+        <button class="btn btn-amber" onclick="openUserModal()">+ Nuevo usuario</button>
+      </div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <table>
+          <thead>
+            <tr><th>Usuario</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Último acceso</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="users-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main><!-- /main -->
+</div><!-- /app -->
+
+<!-- TOAST -->
+<div id="toast">✓ Acción completada</div>
+
+<!-- MODALS (rendered dynamically) -->
+<div id="modal-container"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
