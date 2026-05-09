@@ -8,7 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css">
 </head>
-<body>
+<body><script>if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark-mode');</script>
+
+<nav id="mobile-navbar">
+  <button id="hamburger-btn" aria-label="Abrir menú">☰</button>
+  <span class="mobile-nav-brand">RestaurantOS</span>
+  <div class="mobile-nav-user">
+    <span id="mobile-user-name">Cargando…</span>
+    <span id="mobile-user-role"></span>
+  </div>
+</nav>
 
 <div id="app">
 
@@ -38,6 +47,9 @@
         <span class="ping"></span>
         <span style="font-size:12px; color:var(--text-muted);">Sistema operativo</span>
       </div>
+      <button id="theme-toggle-sidebar" class="btn btn-ghost btn-sm" style="width:100%; justify-content:center; margin-bottom:8px;" title="Cambiar tema">
+        🌙 Tema oscuro
+      </button>
       <button class="btn btn-ghost btn-sm" style="width:100%; justify-content:center;" onclick="doLogout()">
         Cerrar sesión
       </button>
@@ -58,7 +70,7 @@
       </div>
 
       <!-- Status counters -->
-      <div class="grid-3" style="margin-bottom:24px;">
+      <div class="grid-3 pedidos-stats" style="margin-bottom:24px;">
         <div class="stat-box" style="text-align:center;">
           <div class="stat-label">En espera</div>
           <div class="stat-val" id="cnt-espera">0</div>
@@ -74,7 +86,7 @@
       </div>
 
       <!-- Kanban board -->
-      <div id="orders-board" style="display:flex; gap:16px; width:100%; align-items:flex-start;"></div>
+      <div id="orders-board"></div>
 
     </div>
   </main>

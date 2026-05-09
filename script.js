@@ -135,6 +135,10 @@ function updateUserBadge(role, email) {
   if (av) { av.textContent = initials[role]; av.style.background = colors[role]; av.style.color = txtClr[role]; }
   if (nm) nm.textContent = names[role];
   if (rl) rl.textContent = email;
+  const mobileUserName = document.getElementById('mobile-user-name');
+  const mobileUserRole = document.getElementById('mobile-user-role');
+  if (mobileUserName) mobileUserName.textContent = names[role];
+  if (mobileUserRole) mobileUserRole.textContent = email;
 }
 
 function buildNav(role) {
@@ -272,7 +276,7 @@ function openMenuModal(edit) {
     <div style="display:flex;flex-direction:column;gap:12px;">
       <div><label class="lbl">Nombre del plato</label><input class="inp" id="m-name" value="${item?item.name:''}"></div>
       <div><label class="lbl">Descripción</label><input class="inp" id="m-desc" value="${item?item.desc:''}"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="modal-grid-2">
         <div><label class="lbl">Precio ($)</label><input class="inp" id="m-price" type="number" value="${item?item.price:''}"></div>
         <div><label class="lbl">Categoría</label>
           <select class="inp" id="m-cat">
@@ -286,7 +290,7 @@ function openMenuModal(edit) {
         <label style="font-size:13px;color:var(--text-muted);">Disponible</label>
       </div>
     </div>
-    <div style="display:flex;gap:10px;margin-top:24px;justify-content:flex-end;">
+    <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
       <button class="btn btn-amber" onclick="saveMenuItem(${item?item.id:'null'})">${item?'Guardar cambios':'Agregar plato'}</button>
     </div>`);
@@ -388,7 +392,7 @@ function openPedidoModal() {
         <span style="font-size:11px;color:var(--text-muted);">Ctrl+clic para seleccionar varios</span>
       </div>
     </div>
-    <div style="display:flex;gap:10px;margin-top:24px;justify-content:flex-end;">
+    <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
       <button class="btn btn-amber" onclick="savePedido()">Registrar pedido</button>
     </div>`);
@@ -456,11 +460,11 @@ function openReservaModal() {
     <h3 style="font-size:17px;font-weight:500;margin:0 0 20px;">Nueva reserva</h3>
     <div style="display:flex;flex-direction:column;gap:12px;">
       <div><label class="lbl">Nombre del cliente</label><input class="inp" id="r-name" placeholder="Nombre completo"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="modal-grid-2">
         <div><label class="lbl">Fecha</label><input class="inp" id="r-date" type="date"></div>
         <div><label class="lbl">Hora</label><input class="inp" id="r-time" type="time"></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="modal-grid-2">
         <div><label class="lbl">Personas</label><input class="inp" id="r-personas" type="number" min="1" max="20" placeholder="1–20"></div>
         <div><label class="lbl">Mesa</label>
           <select class="inp" id="r-mesa">
@@ -469,7 +473,7 @@ function openReservaModal() {
         </div>
       </div>
     </div>
-    <div style="display:flex;gap:10px;margin-top:24px;justify-content:flex-end;">
+    <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
       <button class="btn btn-amber" onclick="saveReserva()">Registrar reserva</button>
     </div>`);
@@ -570,7 +574,7 @@ function openUserModal() {
       </div>
       <div><label class="lbl">Contraseña temporal</label><input class="inp" id="u-pass" type="password" placeholder="Mín. 8 caracteres"></div>
     </div>
-    <div style="display:flex;gap:10px;margin-top:24px;justify-content:flex-end;">
+    <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
       <button class="btn btn-amber" onclick="saveUser()">Crear usuario</button>
     </div>`);
@@ -614,48 +618,41 @@ function showToast(msg) {
 //  MOBILE MENU
 // ════════════════════════════════════════════════
 function initMobileMenu() {
-  const isMobile = window.innerWidth <= 768;
-  if (!isMobile) return;
-
   const sidebar = document.getElementById('sidebar');
-  const navLinks = document.getElementById('nav-links');
-  if (!sidebar || !navLinks) return;
+  const hamburger = document.getElementById('hamburger-btn');
+  if (!sidebar || !hamburger) return;
+  if (hamburger._menuInit) return;
+  hamburger._menuInit = true;
 
-  // No crear si ya existe
-  if (document.getElementById('hamburger-btn')) return;
-
-  // Crear botón hamburguesa
-  const hamburger = document.createElement('button');
-  hamburger.id = 'hamburger-btn';
-  hamburger.innerHTML = '☰';
-  hamburger.className = 'hamburger-btn';
-
-  document.body.appendChild(hamburger);
-
-  // Toggle sidebar
   hamburger.addEventListener('click', (e) => {
     e.stopPropagation();
-    sidebar.classList.toggle('active');
-    document.body.classList.toggle('sidebar-open');
+    const isOpen = sidebar.classList.toggle('active');
+    document.body.classList.toggle('sidebar-open', isOpen);
+    hamburger.textContent = isOpen ? '✕' : '☰';
   });
 
-  // Cerrar sidebar al navegar
-  navLinks.addEventListener('click', (e) => {
-    if (e.target.closest('a')) {
-      setTimeout(() => {
-        sidebar.classList.remove('active');
-        document.body.classList.remove('sidebar-open');
-      }, 100);
-    }
-  });
-
-  // Cerrar sidebar al hacer click fuera
   document.addEventListener('click', (e) => {
-    if (!sidebar.contains(e.target) && !hamburger.contains(e.target) && sidebar.classList.contains('active')) {
+    if (sidebar.classList.contains('active') &&
+        !sidebar.contains(e.target) &&
+        !hamburger.contains(e.target)) {
       sidebar.classList.remove('active');
       document.body.classList.remove('sidebar-open');
+      hamburger.textContent = '☰';
     }
   });
+
+  const navLinks = document.getElementById('nav-links');
+  if (navLinks) {
+    navLinks.addEventListener('click', (e) => {
+      if (e.target.closest('a')) {
+        setTimeout(() => {
+          sidebar.classList.remove('active');
+          document.body.classList.remove('sidebar-open');
+          hamburger.textContent = '☰';
+        }, 100);
+      }
+    });
+  }
 }
 
 // Inicializar menú móvil cuando carga la página
@@ -746,41 +743,44 @@ function initModulesButton() {
 }
 
 window.addEventListener('resize', () => {
-  // Reinicializar en resize si es necesario
-  if (window.innerWidth > 768 && document.getElementById('hamburger-btn')) {
-    document.getElementById('hamburger-btn').remove();
-    document.getElementById('sidebar').classList.remove('active');
-    document.body.classList.remove('sidebar-open');
+  if (window.innerWidth > 768) {
+    const sidebar = document.getElementById('sidebar');
+    const hamburger = document.getElementById('hamburger-btn');
+    if (sidebar) {
+      sidebar.classList.remove('active');
+      document.body.classList.remove('sidebar-open');
+    }
+    if (hamburger) hamburger.textContent = '☰';
   }
 });
 //  THEME TOGGLE (Dark/Light Mode)
 // ════════════════════════════════════════════════
 function initThemeToggle() {
-  // Detectar preferencia guardada
   const saved = localStorage.getItem('theme') || 'light';
   applyTheme(saved);
-  
-  // Crear botón toggle (visible en desktop y mobile)
-  if (document.getElementById('theme-toggle')) return;
-  
-  const btn = document.createElement('button');
-  btn.id = 'theme-toggle';
-  btn.className = 'theme-toggle';
-  btn.innerHTML = saved === 'dark' ? '☀️' : '🌙';
-  btn.setAttribute('title', 'Cambiar tema');
-  
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+
+  const updateLabels = (theme) => {
+    const label = theme === 'dark' ? '☀️ Tema claro' : '🌙 Tema oscuro';
+    const sidebarBtn = document.getElementById('theme-toggle-sidebar');
+    const loginBtn = document.getElementById('theme-toggle-login');
+    if (sidebarBtn) sidebarBtn.textContent = label;
+    if (loginBtn) loginBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+  };
+
+  updateLabels(saved);
+
+  const handleToggle = () => {
     const current = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
     const newTheme = current === 'dark' ? 'light' : 'dark';
     applyTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    btn.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+    updateLabels(newTheme);
     showToast(`Tema ${newTheme === 'dark' ? 'oscuro' : 'claro'} activado`);
-  });
-  
-  document.body.appendChild(btn);
+  };
+
+  const sidebarBtn = document.getElementById('theme-toggle-sidebar');
+  const loginBtn = document.getElementById('theme-toggle-login');
+  if (sidebarBtn) sidebarBtn.addEventListener('click', handleToggle);
+  if (loginBtn) loginBtn.addEventListener('click', handleToggle);
 }
 
 function applyTheme(theme) {
@@ -792,17 +792,3 @@ function applyTheme(theme) {
   localStorage.setItem('theme', theme);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  initThemeToggle();
-});
-
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 768) {
-    const btn = document.getElementById('theme-toggle');
-    if (btn) btn.remove();
-  } else {
-    if (!document.getElementById('theme-toggle')) {
-      initThemeToggle();
-    }
-  }
-});

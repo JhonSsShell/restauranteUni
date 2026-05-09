@@ -8,10 +8,11 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body><script>if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark-mode');</script>
 
 <div id="login-screen">
-  <div class="login-card">
+  <div class="login-card" style="position:relative;">
+    <button id="theme-toggle-login" title="Cambiar tema">🌙</button>
     <div style="text-align:center; margin-bottom:28px;">
       <div style="font-size:32px; margin-bottom:8px;">🍽️</div>
       <h1 style="font-size:26px; color:var(--primary); margin:0 0 4px;">RestaurantOS</h1>
