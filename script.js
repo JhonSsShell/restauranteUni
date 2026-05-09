@@ -126,8 +126,8 @@ function checkAuth() {
 
 function updateUserBadge(role, email) {
   const initials = { admin:'AD', mesero:'MS', cliente:'CL' };
-  const colors   = { admin:'rgba(217,119,6,0.2)', mesero:'rgba(59,130,246,0.15)', cliente:'rgba(16,185,129,0.1)' };
-  const txtClr   = { admin:'var(--amber-light)', mesero:'#93C5FD', cliente:'#6EE7B7' };
+  const colors   = { admin:'rgba(59,130,246,0.15)', mesero:'rgba(59,130,246,0.15)', cliente:'rgba(16,185,129,0.1)' };
+  const txtClr   = { admin:'var(--primary)', mesero:'var(--primary)', cliente:'#10B981' };
   const names    = { admin:'Administrador', mesero:'Mesero', cliente:'Cliente' };
   const av = document.getElementById('user-avatar');
   const nm = document.getElementById('user-name');
@@ -662,15 +662,7 @@ function initMobileMenu() {
 document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   setupTableResponsive();
-});
-
-window.addEventListener('resize', () => {
-  // Reinicializar en resize si es necesario
-  if (window.innerWidth > 768 && document.getElementById('hamburger-btn')) {
-    document.getElementById('hamburger-btn').remove();
-    document.getElementById('sidebar').classList.remove('active');
-    document.body.classList.remove('sidebar-open');
-  }
+  initThemeToggle();
 });
 
 // ════════════════════════════════════════════════
@@ -753,12 +745,64 @@ function initModulesButton() {
   });
 }
 
-// Limpiar módulos button en resize
+window.addEventListener('resize', () => {
+  // Reinicializar en resize si es necesario
+  if (window.innerWidth > 768 && document.getElementById('hamburger-btn')) {
+    document.getElementById('hamburger-btn').remove();
+    document.getElementById('sidebar').classList.remove('active');
+    document.body.classList.remove('sidebar-open');
+  }
+});
+//  THEME TOGGLE (Dark/Light Mode)
+// ════════════════════════════════════════════════
+function initThemeToggle() {
+  // Detectar preferencia guardada
+  const saved = localStorage.getItem('theme') || 'light';
+  applyTheme(saved);
+  
+  // Crear botón toggle (visible en desktop y mobile)
+  if (document.getElementById('theme-toggle')) return;
+  
+  const btn = document.createElement('button');
+  btn.id = 'theme-toggle';
+  btn.className = 'theme-toggle';
+  btn.innerHTML = saved === 'dark' ? '☀️' : '🌙';
+  btn.setAttribute('title', 'Cambiar tema');
+  
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const current = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+    const newTheme = current === 'dark' ? 'light' : 'dark';
+    applyTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    btn.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+    showToast(`Tema ${newTheme === 'dark' ? 'oscuro' : 'claro'} activado`);
+  });
+  
+  document.body.appendChild(btn);
+}
+
+function applyTheme(theme) {
+  if (theme === 'dark') {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+  localStorage.setItem('theme', theme);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initThemeToggle();
+});
+
 window.addEventListener('resize', () => {
   if (window.innerWidth > 768) {
-    const btn = document.getElementById('modules-btn');
-    const modal = document.getElementById('modules-modal');
+    const btn = document.getElementById('theme-toggle');
     if (btn) btn.remove();
-    if (modal) modal.remove();
+  } else {
+    if (!document.getElementById('theme-toggle')) {
+      initThemeToggle();
+    }
   }
 });
