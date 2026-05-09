@@ -335,29 +335,35 @@ function renderPedidos() {
   const board = document.getElementById('orders-board');
   if (!board) return;
   board.innerHTML = '';
+  
   Object.entries(cols).forEach(([key, col]) => {
     const cards = col.items.map(o => `
-      <div class="order-card" style="margin-bottom:10px;">
+      <div class="order-card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
           <span style="font-size:13px;font-weight:500;">${o.id}</span>
-          <span style="font-size:12px;color:var(--text-muted);">${o.time}</span>
+          <span style="font-size:11px;color:var(--text-muted);">${o.time}</span>
         </div>
         <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Mesa ${o.table} · ${o.mesero}</div>
-        <div style="font-size:12px;margin-bottom:10px;">${o.items.map(i=>`<span style="display:inline-block;background:rgba(217,119,6,0.1);border:1px solid var(--border);border-radius:4px;padding:2px 7px;margin:2px;font-size:11px;">${i}</span>`).join('')}</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-size:14px;font-weight:600;color:var(--amber-light);font-family:'DM Serif Display',serif;">$${o.total.toFixed(2)}</span>
-          ${key!=='entregado'?`<button class="btn btn-amber btn-sm" onclick="advanceOrder('${o.id}')">${key==='espera'?'→ Cocina':'→ Entregado'}</button>`:'<span class="badge badge-green">✓ Listo</span>'}
+        <div style="font-size:12px;margin-bottom:10px;">${o.items.map(i=>`<span style="display:inline-block;background:rgba(217,119,6,0.1);border:1px solid var(--border);border-radius:4px;padding:2px 6px;margin:2px;font-size:10px;white-space:nowrap;">${i}</span>`).join('')}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+          <span style="font-size:13px;font-weight:600;color:var(--amber-light);font-family:'DM Serif Display',serif;">$${o.total.toFixed(2)}</span>
+          ${key!=='entregado'?`<button class="btn btn-amber btn-sm" style="flex:1;" onclick="advanceOrder('${o.id}')">${key==='espera'?'→ Cocina':'→ Entregado'}</button>`:'<span class="badge badge-green" style="flex:1;text-align:center;">✓ Listo</span>'}
         </div>
       </div>`).join('');
+    
     board.innerHTML += `
-      <div style="flex:1;min-width:220px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:10px 14px;background:var(--bg-surface);border-radius:8px;border:1px solid var(--border);">
-          <span class="badge ${col.badge}">${col.items.length}</span>
-          <span style="font-size:13px;font-weight:500;">${col.label}</span>
+      <div class="kanban-column">
+        <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg-surface);border-radius:8px;border:1px solid var(--border);">
+          <span class="badge ${col.badge}" style="font-size:12px;">${col.items.length}</span>
+          <span style="font-size:12px;font-weight:500;color:#F5EDD9;">${col.label}</span>
         </div>
-        ${cards||'<div style="font-size:13px;color:var(--text-muted);text-align:center;padding:20px;">Sin pedidos</div>'}
+        <div class="kanban-column-cards">
+          ${cards||'<div style="font-size:12px;color:var(--text-muted);text-align:center;padding:20px;background:var(--bg-surface);border-radius:8px;">Sin pedidos</div>'}
+        </div>
       </div>`;
   });
+
+  initModulesButton();
 }
 
 function advanceOrder(id) {
@@ -688,3 +694,71 @@ function setupTableResponsive() {
     });
   });
 }
+
+// ════════════════════════════════════════════════
+//  MODULES MODAL (Mobile)
+// ════════════════════════════════════════════════
+function initModulesButton() {
+  if (window.innerWidth > 768) return;
+  
+  // Evitar crear múltiples botones
+  if (document.getElementById('modules-btn')) return;
+
+  const role = store.currentUser?.role;
+  if (!role) return;
+
+  const navItems = ROLE_NAV[role] || [];
+
+  // Crear botón flotante
+  const btn = document.createElement('button');
+  btn.id = 'modules-btn';
+  btn.className = 'modules-btn';
+  btn.innerHTML = '📱';
+  btn.style.display = 'flex';
+
+  // Crear modal
+  const modal = document.createElement('div');
+  modal.id = 'modules-modal';
+  modal.className = 'modules-modal';
+  modal.innerHTML = navItems.map(item => `
+    <a href="${item.href}" class="module-item">
+      <span class="icon">${item.icon}</span>
+      <span class="label">${item.label}</span>
+    </a>
+  `).join('');
+
+  document.body.appendChild(btn);
+  document.body.appendChild(modal);
+
+  // Toggle modal
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    modal.classList.toggle('active');
+  });
+
+  // Cerrar modal al navegar
+  modal.addEventListener('click', (e) => {
+    if (e.target.closest('a')) {
+      setTimeout(() => {
+        modal.classList.remove('active');
+      }, 100);
+    }
+  });
+
+  // Cerrar modal al hacer click fuera
+  document.addEventListener('click', (e) => {
+    if (!modal.contains(e.target) && !btn.contains(e.target) && modal.classList.contains('active')) {
+      modal.classList.remove('active');
+    }
+  });
+}
+
+// Limpiar módulos button en resize
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 768) {
+    const btn = document.getElementById('modules-btn');
+    const modal = document.getElementById('modules-modal');
+    if (btn) btn.remove();
+    if (modal) modal.remove();
+  }
+});
