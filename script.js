@@ -604,3 +604,87 @@ function showToast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=>t.classList.remove('show'), 2800);
 }
+// ════════════════════════════════════════════════
+//  MOBILE MENU
+// ════════════════════════════════════════════════
+function initMobileMenu() {
+  const isMobile = window.innerWidth <= 768;
+  if (!isMobile) return;
+
+  const sidebar = document.getElementById('sidebar');
+  const navLinks = document.getElementById('nav-links');
+  if (!sidebar || !navLinks) return;
+
+  // No crear si ya existe
+  if (document.getElementById('hamburger-btn')) return;
+
+  // Crear botón hamburguesa
+  const hamburger = document.createElement('button');
+  hamburger.id = 'hamburger-btn';
+  hamburger.innerHTML = '☰';
+  hamburger.className = 'hamburger-btn';
+
+  document.body.appendChild(hamburger);
+
+  // Toggle sidebar
+  hamburger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sidebar.classList.toggle('active');
+    document.body.classList.toggle('sidebar-open');
+  });
+
+  // Cerrar sidebar al navegar
+  navLinks.addEventListener('click', (e) => {
+    if (e.target.closest('a')) {
+      setTimeout(() => {
+        sidebar.classList.remove('active');
+        document.body.classList.remove('sidebar-open');
+      }, 100);
+    }
+  });
+
+  // Cerrar sidebar al hacer click fuera
+  document.addEventListener('click', (e) => {
+    if (!sidebar.contains(e.target) && !hamburger.contains(e.target) && sidebar.classList.contains('active')) {
+      sidebar.classList.remove('active');
+      document.body.classList.remove('sidebar-open');
+    }
+  });
+}
+
+// Inicializar menú móvil cuando carga la página
+document.addEventListener('DOMContentLoaded', () => {
+  initMobileMenu();
+  setupTableResponsive();
+});
+
+window.addEventListener('resize', () => {
+  // Reinicializar en resize si es necesario
+  if (window.innerWidth > 768 && document.getElementById('hamburger-btn')) {
+    document.getElementById('hamburger-btn').remove();
+    document.getElementById('sidebar').classList.remove('active');
+    document.body.classList.remove('sidebar-open');
+  }
+});
+
+// ════════════════════════════════════════════════
+//  TABLE RESPONSIVE SETUP
+// ════════════════════════════════════════════════
+function setupTableResponsive() {
+  const tables = document.querySelectorAll('table');
+  tables.forEach(table => {
+    const headers = [];
+    const ths = table.querySelectorAll('thead th');
+    ths.forEach(th => headers.push(th.textContent.trim()));
+
+    const rows = table.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+      const tds = row.querySelectorAll('td');
+      tds.forEach((td, index) => {
+        if (headers[index]) {
+          td.setAttribute('data-label', headers[index]);
+        }
+      });
+    });
+  });
+}

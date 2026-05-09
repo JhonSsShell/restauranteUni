@@ -252,3 +252,430 @@ tr:hover td { background: rgba(217,119,6,0.04); }
 }
 .page-header h2 { font-size: 22px; color: #F5EDD9; margin-bottom: 4px; }
 .page-header p  { font-size: 13px; color: var(--text-muted); }
+
+/* ════════════════════════════════════════════════
+   ── RESPONSIVE DESIGN ──
+   ════════════════════════════════════════════════ */
+
+/* ── Tablet (768px) ── */
+@media (max-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .grid-1-4 { grid-template-columns: 1fr; gap: 16px; }
+  .page-content { padding: 20px 24px; }
+  .page-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .page-header .btn { align-self: flex-start; }
+  .tabs { overflow-x: auto; }
+}
+
+/* ── Mobile (768px y menor) ── */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-w: 0px;
+  }
+
+  /* ── App layout para mobile ── */
+  #app {
+    flex-direction: column;
+  }
+
+  /* ── Sidebar mobile ── */
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    right: auto;
+    width: 70vw;
+    max-width: 280px;
+    height: 100vh;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+    border-right: 1px solid var(--border);
+    border-bottom: none;
+  }
+
+  #sidebar.active {
+    left: 0;
+  }
+
+  /* ── Overlay para cerrar sidebar ── */
+  body.sidebar-open::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 900;
+  }
+
+  /* ── Hamburger button ── */
+  #hamburger-btn {
+    position: fixed !important;
+    top: 12px !important;
+    left: 12px !important;
+    z-index: 980 !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    color: #F5EDD9 !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-size: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s !important;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+
+  #hamburger-btn:hover {
+    background: var(--bg-surface) !important;
+    border-color: var(--amber) !important;
+  }
+
+  #hamburger-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* ── Main content mobile ── */
+  #main {
+    margin-left: 0;
+    width: 100%;
+    min-height: auto;
+  }
+
+  /* ── Padding mobile ── */
+  .page-content {
+    padding: 16px 16px 80px;
+    padding-top: 60px;
+  }
+
+  /* ── Header mobile ── */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .page-header h2 {
+    font-size: 18px;
+  }
+
+  .page-header p {
+    font-size: 12px;
+  }
+
+  .page-header .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ── Grids mobile ── */
+  .grid-4 {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .grid-3 {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .grid-1-4 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* ── Cards mobile ── */
+  .card {
+    padding: 14px 16px;
+    border-radius: 10px;
+  }
+
+  .card-sm {
+    padding: 10px 12px;
+  }
+
+  /* ── Stat box mobile ── */
+  .stat-box {
+    padding: 12px 14px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-size: 24px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+  }
+
+  /* ── Buttons mobile ── */
+  .btn {
+    padding: 11px 16px;
+    font-size: 13px;
+    border-radius: 8px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-sm {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  /* ── Inputs mobile ── */
+  .inp {
+    padding: 12px 14px;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+
+  label.lbl {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  /* ── Flexbox para campos de formulario ── */
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card > div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Table mobile (convertir a tarjetas) ── */
+  table {
+    font-size: 13px;
+  }
+
+  table thead {
+    display: none;
+  }
+
+  table tbody tr {
+    display: block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    padding: 12px;
+  }
+
+  table td {
+    display: block;
+    padding: 8px 0;
+    border-bottom: none;
+    text-align: left;
+  }
+
+  table td::before {
+    content: attr(data-label);
+    display: inline-block;
+    font-weight: 500;
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-right: 8px;
+    min-width: 80px;
+  }
+
+  table tr:hover td {
+    background: transparent;
+  }
+
+  /* ── Tabs mobile ── */
+  .tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 16px;
+  }
+
+  .tab {
+    padding: 8px 16px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* ── Menu item mobile ── */
+  .menu-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  /* ── Order card mobile ── */
+  .order-card {
+    padding: 12px 14px;
+  }
+
+  /* ── Charts mobile ── */
+  .chart-bar {
+    height: 100px;
+    gap: 6px;
+  }
+
+  .bar-col {
+    gap: 3px;
+  }
+
+  .bar-label {
+    font-size: 9px;
+  }
+
+  .bar-val {
+    font-size: 10px;
+  }
+
+  /* ── Avatar mobile ── */
+  .avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
+  }
+
+  /* ── Badge mobile ── */
+  .badge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  /* ── Toast mobile ── */
+  #toast {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    font-size: 12px;
+    padding: 12px 16px;
+  }
+
+  /* ── Modal mobile ── */
+  .modal-bg {
+    padding: 16px;
+  }
+
+  .modal-box {
+    width: 100%;
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  /* ── Login card mobile ── */
+  .login-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 28px 20px;
+    border-radius: 14px;
+  }
+
+  #login-screen {
+    padding: 16px;
+  }
+
+  /* ── Section title mobile ── */
+  .section-title {
+    font-size: 10px;
+    margin-bottom: 10px;
+  }
+
+  /* ── Nav mobile ── */
+  .nav-item {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  #user-badge {
+    padding: 12px 16px;
+  }
+
+  /* ── Page header text mobile ── */
+  .page-header h2 {
+    font-size: 20px;
+  }
+}
+
+/* ── Extra Small (480px y menor) ── */
+@media (max-width: 480px) {
+  .page-content {
+    padding: 12px 12px 80px;
+  }
+
+  .page-header h2 {
+    font-size: 18px;
+  }
+
+  .stat-val {
+    font-size: 20px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+  }
+
+  .card {
+    padding: 12px 12px;
+  }
+
+  .btn {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .inp {
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+
+  .modal-box {
+    padding: 16px 12px;
+  }
+
+  .login-card {
+    padding: 24px 16px;
+  }
+
+  /* ── Reducir tabla en pantallas muy pequeñas ── */
+  table td {
+    padding: 6px 0;
+    font-size: 12px;
+  }
+
+  table td::before {
+    font-size: 10px;
+    min-width: 70px;
+  }
+
+  /* ── Grid 4 en mobile pequeño ── */
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  /* ── Eliminar algunos gaps en pantallas muy pequeñas ── */
+  .tabs {
+    gap: 2px;
+    padding: 3px;
+  }
+}
+
+/* ── Landscape Mobile (máx 600px altura) ── */
+@media (max-height: 600px) and (max-width: 768px) {
+  .page-content {
+    padding: 12px 16px 60px;
+  }
+
+  #sidebar {
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+}
